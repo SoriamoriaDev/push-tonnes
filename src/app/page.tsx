@@ -9,6 +9,7 @@ export default function Home() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [signingIn, setSigningIn] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (user && !loading) {
@@ -18,14 +19,16 @@ export default function Home() {
 
   const handleSignIn = async () => {
     setSigningIn(true);
+    setError('');
     try {
       const user = await signInWithGoogle();
-      // If user is null, it means redirect was used (PWA mode) — page will reload
       if (user) {
         router.push('/dashboard');
       }
-    } catch (error) {
-      console.error('Sign in failed:', error);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error('Sign in failed:', err);
+      setError(message);
       setSigningIn(false);
     }
   };
@@ -87,6 +90,12 @@ export default function Home() {
           )}
           <span>{signingIn ? 'Signing in...' : 'Sign in with Google'}</span>
         </button>
+
+        {error && (
+          <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-left">
+            <p className="text-red-400 text-xs break-all">{error}</p>
+          </div>
+        )}
       </div>
     </div>
   );
