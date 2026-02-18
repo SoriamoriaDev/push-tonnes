@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User } from 'firebase/auth';
-import { onAuthChange } from '@/lib/auth';
+import { onAuthChange, handleRedirectResult } from '@/lib/auth';
 
 interface AuthContextType {
   user: User | null;
@@ -20,11 +20,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthChange((user) => {
-      setUser(user);
-      setLoading(false);
-    });
-    return unsubscribe;
+    let unsubscribe: (() => void) | undefined;
+
+    async function init() {
+      // First, check if we're returning from a redirect sign-in
+      // This MUST be called before onAuthStateChanged can resolve the user
+      try {
+        await handleRedirectResult();
+      } catch (error) {
+        console.error('Redirect result error:', error);
+      }
+
+      // Now listen for auth state changes
+      unsubscribe = onAuthChange((authUser) => {
+        setUser(authUser);
+        setLoading(false);
+      });
+    }
+
+    init();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   return (

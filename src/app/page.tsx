@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/components/AuthProvider';
-import { signInWithGoogle, handleRedirectResult } from '@/lib/auth';
+import { signInWithGoogle } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -15,15 +15,6 @@ export default function Home() {
       router.push('/dashboard');
     }
   }, [user, loading, router]);
-
-  // Handle redirect result when coming back from Google sign-in (PWA mode)
-  useEffect(() => {
-    handleRedirectResult().then((user) => {
-      if (user) {
-        router.push('/dashboard');
-      }
-    });
-  }, [router]);
 
   const handleSignIn = async () => {
     setSigningIn(true);
