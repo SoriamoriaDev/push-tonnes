@@ -4,7 +4,7 @@ import { useAuth } from '@/components/AuthProvider';
 import BottomNav from '@/components/BottomNav';
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { getSession, deleteSession } from '@/lib/firestore';
+import { getSession, deleteSession, saveAnalysis } from '@/lib/firestore';
 import { Session, AIAnalysis } from '@/types';
 import { formatTonnage, formatDate } from '@/lib/utils';
 
@@ -26,7 +26,10 @@ export default function SessionDetail() {
   useEffect(() => {
     if (user && sessionId) {
       getSession(user.uid, sessionId)
-        .then(setSession)
+        .then((s) => {
+          setSession(s);
+          if (s?.aiAnalysis) setAnalysis(s.aiAnalysis);
+        })
         .catch(console.error)
         .finally(() => setLoadingSession(false));
     }
@@ -48,7 +51,7 @@ export default function SessionDetail() {
   };
 
   const handleAnalyze = async () => {
-    if (!session) return;
+    if (!session || !user || !session.id) return;
     setAnalyzing(true);
     try {
       const res = await fetch('/api/analyze', {
@@ -59,8 +62,11 @@ export default function SessionDetail() {
       if (res.ok) {
         const data = await res.json();
         setAnalysis(data);
+        // Save to Firestore so it persists
+        await saveAnalysis(user.uid, session.id, data);
       } else {
-        alert('AI analysis failed. Please try again.');
+        const errData = await res.json().catch(() => null);
+        alert(errData?.error || 'AI analysis failed. Please try again.');
       }
     } catch (error) {
       console.error('Analysis failed:', error);
@@ -150,66 +156,77 @@ export default function SessionDetail() {
         )}
 
         {/* AI Analysis */}
-        {!analysis ? (
-          <button
-            onClick={handleAnalyze}
-            disabled={analyzing}
-            className="w-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white font-medium py-3 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            {analyzing ? (
-              <>
-                <div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                Analyzing...
-              </>
-            ) : (
-              <>
-                <span>🤖</span>
-                Get AI Analysis
-              </>
-            )}
-          </button>
-        ) : (
-          <div className="bg-zinc-900 border border-orange-500/20 rounded-xl p-4 mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span>🤖</span>
-              <h3 className="font-medium text-white">AI Coach Analysis</h3>
+        <div className="mb-24">
+          {!analysis ? (
+            <button
+              onClick={handleAnalyze}
+              disabled={analyzing}
+              className="w-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white font-medium py-3 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {analyzing ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <span>🤖</span>
+                  Get AI Analysis
+                </>
+              )}
+            </button>
+          ) : (
+            <div className="bg-zinc-900 border border-orange-500/20 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span>🤖</span>
+                  <h3 className="font-medium text-white">AI Coach Analysis</h3>
+                </div>
+                <button
+                  onClick={handleAnalyze}
+                  disabled={analyzing}
+                  className="text-xs text-zinc-500 hover:text-zinc-300 disabled:opacity-50"
+                >
+                  {analyzing ? 'Analyzing...' : 'Re-analyze'}
+                </button>
+              </div>
+              <p className="text-sm text-zinc-300 mb-3">{analysis.summary}</p>
+
+              {analysis.strengths.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-xs font-medium text-green-400 mb-1">Strengths</p>
+                  <ul className="space-y-1">
+                    {analysis.strengths.map((s, i) => (
+                      <li key={i} className="text-xs text-zinc-400">+ {s}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {analysis.improvements.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-xs font-medium text-yellow-400 mb-1">Areas to Improve</p>
+                  <ul className="space-y-1">
+                    {analysis.improvements.map((s, i) => (
+                      <li key={i} className="text-xs text-zinc-400">→ {s}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {analysis.recommendations.length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-blue-400 mb-1">Recommendations</p>
+                  <ul className="space-y-1">
+                    {analysis.recommendations.map((s, i) => (
+                      <li key={i} className="text-xs text-zinc-400">• {s}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
-            <p className="text-sm text-zinc-300 mb-3">{analysis.summary}</p>
-
-            {analysis.strengths.length > 0 && (
-              <div className="mb-3">
-                <p className="text-xs font-medium text-green-400 mb-1">Strengths</p>
-                <ul className="space-y-1">
-                  {analysis.strengths.map((s, i) => (
-                    <li key={i} className="text-xs text-zinc-400">+ {s}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {analysis.improvements.length > 0 && (
-              <div className="mb-3">
-                <p className="text-xs font-medium text-yellow-400 mb-1">Areas to Improve</p>
-                <ul className="space-y-1">
-                  {analysis.improvements.map((s, i) => (
-                    <li key={i} className="text-xs text-zinc-400">→ {s}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {analysis.recommendations.length > 0 && (
-              <div>
-                <p className="text-xs font-medium text-blue-400 mb-1">Recommendations</p>
-                <ul className="space-y-1">
-                  {analysis.recommendations.map((s, i) => (
-                    <li key={i} className="text-xs text-zinc-400">• {s}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </main>
       <BottomNav />
     </div>

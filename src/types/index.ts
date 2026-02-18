@@ -31,6 +31,7 @@ export interface Session {
   totalTonnage: number;
   exercises: Exercise[];
   notes?: string;
+  aiAnalysis?: AIAnalysis;
   createdAt: Date;
 }
 

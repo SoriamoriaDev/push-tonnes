@@ -15,6 +15,7 @@ import { getFirebaseDb } from './firebase';
 import {
   Session,
   Exercise,
+  AIAnalysis,
   ExerciseCatalogEntry,
   LeaderboardEntry,
   UserSettings,
@@ -68,6 +69,7 @@ export async function getSessions(
       totalTonnage: data.totalTonnage,
       exercises: data.exercises as Exercise[],
       notes: data.notes,
+      aiAnalysis: data.aiAnalysis as AIAnalysis | undefined,
       createdAt: data.createdAt.toDate(),
     };
   });
@@ -90,8 +92,19 @@ export async function getSession(
     totalTonnage: data.totalTonnage,
     exercises: data.exercises as Exercise[],
     notes: data.notes,
+    aiAnalysis: data.aiAnalysis as AIAnalysis | undefined,
     createdAt: data.createdAt.toDate(),
   };
+}
+
+export async function saveAnalysis(
+  userId: string,
+  sessionId: string,
+  analysis: AIAnalysis
+): Promise<void> {
+  const db = getFirebaseDb();
+  const sessionRef = doc(db, 'users', userId, 'sessions', sessionId);
+  await setDoc(sessionRef, { aiAnalysis: analysis }, { merge: true });
 }
 
 export async function deleteSession(
@@ -269,6 +282,7 @@ export async function getSessionsForRange(
       totalTonnage: data.totalTonnage,
       exercises: data.exercises as Exercise[],
       notes: data.notes,
+      aiAnalysis: data.aiAnalysis as AIAnalysis | undefined,
       createdAt: data.createdAt.toDate(),
     };
   });
