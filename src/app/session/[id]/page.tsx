@@ -93,35 +93,43 @@ export default function SessionDetail() {
 
   return (
     <div className="min-h-screen">
-      <main className="max-w-lg mx-auto px-4 pt-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <button
-              onClick={() => router.back()}
-              className="text-zinc-400 text-sm hover:text-zinc-200 mb-1"
-            >
-              ← Back
-            </button>
-            <h1 className="text-xl font-bold text-white">
-              {formatDate(session.date)}
-            </h1>
+      {/* Sticky header with tonnage */}
+      <div className="sticky top-0 z-10 bg-black/90 backdrop-blur-sm border-b border-zinc-800">
+        <div className="max-w-lg mx-auto px-4 pt-4 pb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => router.back()}
+                className="text-zinc-400 text-sm hover:text-zinc-200"
+              >
+                ←
+              </button>
+              <div>
+                <h1 className="text-sm font-medium text-white leading-tight">
+                  {formatDate(session.date)}
+                </h1>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-bold text-orange-500 leading-tight">
+                {formatTonnage(session.totalTonnage)}
+              </p>
+              <p className="text-zinc-500 text-[10px]">total tonnage</p>
+            </div>
           </div>
+        </div>
+      </div>
+
+      <main className="max-w-lg mx-auto px-4 pt-4">
+        {/* Delete button */}
+        <div className="flex justify-end mb-4">
           <button
             onClick={handleDelete}
             disabled={deleting}
-            className="text-red-500 text-sm hover:text-red-400 disabled:opacity-50"
+            className="text-red-500 text-xs hover:text-red-400 disabled:opacity-50"
           >
-            {deleting ? 'Deleting...' : 'Delete'}
+            {deleting ? 'Deleting...' : 'Delete session'}
           </button>
-        </div>
-
-        {/* Total Tonnage */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-4 text-center">
-          <p className="text-zinc-400 text-xs">Total Tonnage</p>
-          <p className="text-3xl font-bold text-orange-500">
-            {formatTonnage(session.totalTonnage)}
-          </p>
         </div>
 
         {/* Exercises */}
