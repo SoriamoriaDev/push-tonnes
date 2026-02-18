@@ -57,7 +57,7 @@ Focus on:
 Keep responses concise and actionable. Maximum 3 items per category.`;
 
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6-20250217',
       max_tokens: 1024,
       messages: [{ role: 'user', content: prompt }],
     });
