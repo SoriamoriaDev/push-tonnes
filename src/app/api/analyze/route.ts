@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
-
 export async function POST(request: NextRequest) {
   try {
+    const apiKey = process.env.CLAUDE_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'CLAUDE_API_KEY is not configured.' },
+        { status: 500 }
+      );
+    }
+
+    const anthropic = new Anthropic({ apiKey });
     const { session } = await request.json();
 
     if (!session || !session.exercises) {
@@ -52,7 +57,7 @@ Focus on:
 Keep responses concise and actionable. Maximum 3 items per category.`;
 
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 1024,
       messages: [{ role: 'user', content: prompt }],
     });
@@ -73,8 +78,9 @@ Keep responses concise and actionable. Maximum 3 items per category.`;
     }
   } catch (error) {
     console.error('AI analysis error:', error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: 'AI analysis failed. Make sure ANTHROPIC_API_KEY is configured.' },
+      { error: `AI analysis failed: ${message}` },
       { status: 500 }
     );
   }
