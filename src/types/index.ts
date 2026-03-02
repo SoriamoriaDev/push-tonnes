@@ -8,6 +8,9 @@ export interface UserProfile {
 
 export interface UserSettings {
   showOnLeaderboard: boolean;
+  age?: number;
+  weight?: number;
+  gender?: 'male' | 'female' | 'other';
 }
 
 export interface WorkoutSet {
@@ -24,6 +27,12 @@ export interface Exercise {
   sets: WorkoutSet[];
 }
 
+export interface SessionLocation {
+  lat: number;
+  lng: number;
+  accuracy: number;
+}
+
 export interface Session {
   id?: string;
   userId: string;
@@ -32,6 +41,7 @@ export interface Session {
   exercises: Exercise[];
   notes?: string;
   aiAnalysis?: AIAnalysis;
+  location?: SessionLocation;
   createdAt: Date;
 }
 

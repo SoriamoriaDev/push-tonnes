@@ -2,6 +2,7 @@ import {
   collection,
   doc,
   setDoc,
+  updateDoc,
   getDoc,
   getDocs,
   deleteDoc,
@@ -39,6 +40,7 @@ export async function saveSession(session: Session): Promise<string> {
       sets: ex.sets,
     })),
     notes: session.notes || '',
+    ...(session.location ? { location: session.location } : {}),
     createdAt: Timestamp.fromDate(new Date()),
   });
 
@@ -105,6 +107,29 @@ export async function saveAnalysis(
   const db = getFirebaseDb();
   const sessionRef = doc(db, 'users', userId, 'sessions', sessionId);
   await setDoc(sessionRef, { aiAnalysis: analysis }, { merge: true });
+}
+
+export async function updateSession(
+  userId: string,
+  sessionId: string,
+  updates: Partial<Pick<Session, 'date' | 'exercises' | 'notes' | 'totalTonnage'>>
+): Promise<void> {
+  const db = getFirebaseDb();
+  const sessionRef = doc(db, 'users', userId, 'sessions', sessionId);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data: any = {};
+  if (updates.date) data.date = Timestamp.fromDate(updates.date);
+  if (updates.totalTonnage !== undefined) data.totalTonnage = updates.totalTonnage;
+  if (updates.exercises) {
+    data.exercises = updates.exercises.map((ex) => ({
+      name: ex.name,
+      order: ex.order,
+      tonnage: ex.tonnage,
+      sets: ex.sets,
+    }));
+  }
+  if (updates.notes !== undefined) data.notes = updates.notes;
+  await updateDoc(sessionRef, data);
 }
 
 export async function deleteSession(

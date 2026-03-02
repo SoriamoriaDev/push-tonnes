@@ -121,8 +121,14 @@ export default function SessionDetail() {
       </div>
 
       <main className="max-w-lg mx-auto px-4 pt-4">
-        {/* Delete button */}
-        <div className="flex justify-end mb-4">
+        {/* Action buttons */}
+        <div className="flex justify-end gap-4 mb-4">
+          <button
+            onClick={() => router.push(`/session/${sessionId}/edit`)}
+            className="text-orange-500 text-xs hover:text-orange-400"
+          >
+            Edit session
+          </button>
           <button
             onClick={handleDelete}
             disabled={deleting}
