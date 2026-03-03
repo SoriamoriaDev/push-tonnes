@@ -20,6 +20,7 @@ import {
   ExerciseCatalogEntry,
   LeaderboardEntry,
   UserSettings,
+  getWeightCategory,
 } from '@/types';
 import { getMonthKey } from './utils';
 
@@ -220,12 +221,17 @@ async function updateLeaderboard(
   const userSnap = await getDoc(userRef);
   const userData = userSnap.data();
 
+  const userWeight = settings.weight;
+  const weightCategory = getWeightCategory(userWeight) ?? null;
+
   const entry = {
     userId,
     displayName: userData?.displayName || 'Anonymous',
     photoURL: userData?.photoURL || null,
     bestSessionTonnage: session.totalTonnage,
     bestSessionDate: Timestamp.fromDate(session.date),
+    ...(userWeight ? { weight: userWeight } : {}),
+    ...(weightCategory ? { weightCategory } : {}),
   };
 
   // Update all-time leaderboard
@@ -277,8 +283,90 @@ export async function getLeaderboard(
       photoURL: data.photoURL,
       bestSessionTonnage: data.bestSessionTonnage,
       bestSessionDate: data.bestSessionDate.toDate(),
+      weight: data.weight,
+      weightCategory: data.weightCategory,
     };
   });
+}
+
+// ---- Gym Leaderboard ----
+
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+export async function getGymLeaderboard(
+  lat: number,
+  lng: number,
+  radiusKm: number = 1
+): Promise<LeaderboardEntry[]> {
+  const db = getFirebaseDb();
+  // Get all-time leaderboard entries that have location data in sessions
+  // Strategy: load recent sessions collection-group filtered by recent date, find users near location
+  const { collectionGroup } = await import('firebase/firestore');
+  const sessionsRef = collectionGroup(db, 'sessions');
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 90); // last 90 days
+  const q = query(
+    sessionsRef,
+    where('location', '!=', null),
+    where('date', '>=', Timestamp.fromDate(cutoff)),
+    limit(500)
+  );
+  const snapshot = await getDocs(q);
+
+  // Find users with sessions near this location
+  const userBestTonnage: Map<string, { tonnage: number; date: Date; userId: string }> = new Map();
+
+  for (const d of snapshot.docs) {
+    const data = d.data();
+    const loc = data.location;
+    if (!loc?.lat || !loc?.lng) continue;
+
+    const dist = haversineKm(lat, lng, loc.lat, loc.lng);
+    if (dist > radiusKm) continue;
+
+    const userId = d.ref.parent.parent?.id;
+    if (!userId) continue;
+
+    const tonnage = data.totalTonnage || 0;
+    const existing = userBestTonnage.get(userId);
+    if (!existing || tonnage > existing.tonnage) {
+      userBestTonnage.set(userId, { tonnage, date: data.date.toDate(), userId });
+    }
+  }
+
+  if (userBestTonnage.size === 0) return [];
+
+  // Fetch display names from allTime leaderboard
+  const allTimeRef = collection(db, 'leaderboard', 'allTime', 'entries');
+  const userIds = Array.from(userBestTonnage.keys());
+  const entries: LeaderboardEntry[] = [];
+
+  for (const userId of userIds) {
+    const entrySnap = await getDoc(doc(allTimeRef, userId));
+    const best = userBestTonnage.get(userId)!;
+    const entryData = entrySnap.exists() ? entrySnap.data() : null;
+    entries.push({
+      userId,
+      displayName: entryData?.displayName || 'Anonymous',
+      photoURL: entryData?.photoURL || null,
+      bestSessionTonnage: best.tonnage,
+      bestSessionDate: best.date,
+      weight: entryData?.weight,
+      weightCategory: entryData?.weightCategory,
+    });
+  }
+
+  return entries.sort((a, b) => b.bestSessionTonnage - a.bestSessionTonnage);
 }
 
 // ---- Analytics helpers ----

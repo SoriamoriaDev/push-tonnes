@@ -61,12 +61,25 @@ export type ExerciseCategory =
   | 'core'
   | 'other';
 
+export type WeightCategory = '-70kg' | '70-80kg' | '80-90kg' | '90-100kg' | '+100kg';
+
+export function getWeightCategory(weight?: number): WeightCategory | null {
+  if (!weight) return null;
+  if (weight < 70) return '-70kg';
+  if (weight < 80) return '70-80kg';
+  if (weight < 90) return '80-90kg';
+  if (weight < 100) return '90-100kg';
+  return '+100kg';
+}
+
 export interface LeaderboardEntry {
   userId: string;
   displayName: string;
   photoURL: string | null;
   bestSessionTonnage: number;
   bestSessionDate: Date;
+  weight?: number;
+  weightCategory?: WeightCategory;
 }
 
 export interface AIAnalysis {
