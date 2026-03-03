@@ -10,7 +10,7 @@ import { calculateVolume, calculateExerciseTonnage, calculateSessionTonnage, for
 import { Exercise, WorkoutSet, ExerciseCatalogEntry, SessionLocation } from '@/types';
 import { SpeechResult } from '@/lib/speech';
 
-const DRAFT_KEY = 'pushAtonne_draftSession';
+const DRAFT_KEY = 'pushTonnes_draftSession';
 
 interface ExerciseFormData {
   name: string;

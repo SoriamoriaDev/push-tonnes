@@ -3,13 +3,13 @@ import './globals.css';
 import { AuthProvider } from '@/components/AuthProvider';
 
 export const metadata: Metadata = {
-  title: 'PushAtonne - Gym Tracker',
+  title: 'Push Tonnes - Gym Tracker',
   description: 'Track your gym sessions, analyze tonnage, and compete on the leaderboard',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'PushAtonne',
+    title: 'Push Tonnes',
   },
 };
 

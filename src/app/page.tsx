@@ -97,7 +97,7 @@ export default function Home() {
               <path d="M6.5 6.5v11M17.5 6.5v11M2 9.5h5M2 14.5h5M17 9.5h5M17 14.5h5M6.5 12h11" strokeLinecap="round" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">PushAtonne</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Push Tonnes</h1>
           <p className="text-zinc-400 text-sm">
             Track your tonnage. Analyze your progress. Compete with friends. 💪
           </p>
