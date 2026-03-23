@@ -12,6 +12,14 @@ export function calculateSessionTonnage(exercises: Exercise[]): number {
   return exercises.reduce((sum, ex) => sum + ex.tonnage, 0);
 }
 
+export function formatDuration(minutes?: number): string {
+  if (!minutes) return '';
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
+
 export function formatTonnage(kg: number): string {
   if (kg >= 1000) {
     return `${(kg / 1000).toFixed(1)}t`;

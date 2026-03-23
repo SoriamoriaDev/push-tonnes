@@ -42,6 +42,7 @@ export async function saveSession(session: Session): Promise<string> {
     })),
     notes: session.notes || '',
     ...(session.location ? { location: session.location } : {}),
+    ...(session.duration !== undefined ? { duration: session.duration } : {}),
     createdAt: Timestamp.fromDate(new Date()),
   });
 
@@ -96,6 +97,7 @@ export async function getSession(
     exercises: data.exercises as Exercise[],
     notes: data.notes,
     aiAnalysis: data.aiAnalysis as AIAnalysis | undefined,
+    duration: data.duration,
     createdAt: data.createdAt.toDate(),
   };
 }
@@ -130,6 +132,7 @@ export async function updateSession(
     }));
   }
   if (updates.notes !== undefined) data.notes = updates.notes;
+  if (updates.duration !== undefined) data.duration = updates.duration;
   await updateDoc(sessionRef, data);
 }
 

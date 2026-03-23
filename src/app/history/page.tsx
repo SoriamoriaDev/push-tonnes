@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getSessions } from '@/lib/firestore';
 import { Session } from '@/types';
-import { formatTonnage, formatDate } from '@/lib/utils';
+import { formatTonnage, formatDate, formatDuration } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function History() {
@@ -95,9 +95,16 @@ export default function History() {
                         >
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="text-sm font-medium text-white">
-                                {formatDate(session.date)}
-                              </p>
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-white">
+                                  {formatDate(session.date)}
+                                </p>
+                                {session.duration && (
+                                  <span className="text-[10px] bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">
+                                    {formatDuration(session.duration)}
+                                  </span>
+                                )}
+                              </div>
                               <p className="text-xs text-zinc-500 mt-0.5">
                                 {session.exercises.map((e) => e.name).join(', ')}
                               </p>

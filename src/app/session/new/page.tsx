@@ -37,6 +37,7 @@ export default function NewSession() {
   const [showDraftBanner, setShowDraftBanner] = useState(false);
   const [location, setLocation] = useState<SessionLocation | null>(null);
   const [locationStatus, setLocationStatus] = useState<'idle' | 'acquiring' | 'ok' | 'denied'>('idle');
+  const [startTime] = useState(() => Date.now());
   const isFirstRender = useRef(true);
 
   useEffect(() => {
@@ -213,6 +214,7 @@ export default function NewSession() {
         totalTonnage: calculateSessionTonnage(sessionExercises),
         exercises: sessionExercises,
         notes,
+        duration: Math.round((Date.now() - startTime) / 60000),
         ...(location ? { location } : {}),
         createdAt: new Date(),
       });

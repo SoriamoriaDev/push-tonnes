@@ -42,6 +42,7 @@ export interface Session {
   notes?: string;
   aiAnalysis?: AIAnalysis;
   location?: SessionLocation;
+  duration?: number;
   createdAt: Date;
 }
 
