@@ -115,7 +115,7 @@ export async function saveAnalysis(
 export async function updateSession(
   userId: string,
   sessionId: string,
-  updates: Partial<Pick<Session, 'date' | 'exercises' | 'notes' | 'totalTonnage'>>
+  updates: Partial<Pick<Session, 'date' | 'exercises' | 'notes' | 'totalTonnage' | 'duration'>>
 ): Promise<void> {
   const db = getFirebaseDb();
   const sessionRef = doc(db, 'users', userId, 'sessions', sessionId);
