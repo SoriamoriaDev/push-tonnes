@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUserSettings, updateUserSettings } from '@/lib/firestore';
 import { signOut } from '@/lib/auth';
+import { updateProfile } from 'firebase/auth';
 import { UserSettings } from '@/types';
 
 export default function SettingsPage() {
@@ -23,7 +24,13 @@ export default function SettingsPage() {
   useEffect(() => {
     if (user) {
       getUserSettings(user.uid)
-        .then(setSettings)
+        .then((s) => {
+          // Pre-fill displayName from Firebase Auth if not set in settings
+          if (!s.displayName && user.displayName) {
+            s.displayName = user.displayName;
+          }
+          setSettings(s);
+        })
         .catch(console.error)
         .finally(() => setLoadingSettings(false));
     }
@@ -34,6 +41,10 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       await updateUserSettings(user.uid, settings);
+      // Also update Firebase Auth display name if changed
+      if (settings.displayName && settings.displayName !== user.displayName) {
+        await updateProfile(user, { displayName: settings.displayName });
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
@@ -90,6 +101,17 @@ export default function SettingsPage() {
           <p className="text-xs text-zinc-500 mb-3 uppercase tracking-wider">Personal Info</p>
 
           <div className="space-y-3">
+            <div>
+              <label className="text-sm text-zinc-400 block mb-1">Display Name</label>
+              <input
+                type="text"
+                value={settings.displayName ?? ''}
+                onChange={(e) => setSettings({ ...settings, displayName: e.target.value || undefined })}
+                placeholder="Your name"
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-orange-500"
+              />
+            </div>
+
             <div>
               <label className="text-sm text-zinc-400 block mb-1">Age</label>
               <input

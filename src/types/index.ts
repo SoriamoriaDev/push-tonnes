@@ -8,6 +8,7 @@ export interface UserProfile {
 
 export interface UserSettings {
   showOnLeaderboard: boolean;
+  displayName?: string;
   age?: number;
   weight?: number;
   gender?: 'male' | 'female' | 'other';
