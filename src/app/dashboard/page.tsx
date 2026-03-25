@@ -22,10 +22,15 @@ export default function Dashboard() {
     }
   }, [user, loading, router]);
 
+  const [allSessions, setAllSessions] = useState<Session[]>([]);
+
   useEffect(() => {
     if (user) {
-      getSessions(user.uid, 5)
-        .then(setRecentSessions)
+      getSessions(user.uid, 1000)
+        .then((sessions) => {
+          setAllSessions(sessions);
+          setRecentSessions(sessions.slice(0, 5));
+        })
         .catch(console.error)
         .finally(() => setLoadingSessions(false));
     }
@@ -44,13 +49,7 @@ export default function Dashboard() {
     );
   }
 
-  const weekTonnage = recentSessions
-    .filter((s) => {
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return s.date >= weekAgo;
-    })
-    .reduce((sum, s) => sum + s.totalTonnage, 0);
+  const allTimeTonnage = allSessions.reduce((sum, s) => sum + s.totalTonnage, 0);
 
   return (
     <div className="min-h-screen">
@@ -74,15 +73,15 @@ export default function Dashboard() {
         {/* Quick Stats */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-            <p className="text-zinc-400 text-xs mb-1">This Week</p>
+            <p className="text-zinc-400 text-xs mb-1">All Time</p>
             <p className="text-2xl font-bold text-orange-500">
-              {formatTonnage(weekTonnage)}
+              {formatTonnage(allTimeTonnage)}
             </p>
           </div>
           <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
             <p className="text-zinc-400 text-xs mb-1">Total Sessions</p>
             <p className="text-2xl font-bold text-white">
-              {recentSessions.length}
+              {allSessions.length}
             </p>
           </div>
         </div>
