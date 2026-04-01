@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/components/AuthProvider';
-import { signInWithGoogle, getGoogleRedirectResult, signInWithEmail, signUpWithEmail, sendPasswordReset } from '@/lib/auth';
+import { signInWithGoogle, signInWithEmail, signUpWithEmail, sendPasswordReset } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -18,12 +18,6 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [resetSent, setResetSent] = useState(false);
-
-  useEffect(() => {
-    getGoogleRedirectResult().catch((err) => {
-      console.error('Redirect result error:', err);
-    });
-  }, []);
 
   useEffect(() => {
     if (user && !loading) {

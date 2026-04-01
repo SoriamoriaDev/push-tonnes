@@ -1,7 +1,5 @@
 import {
   signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
   GoogleAuthProvider,
   signOut as firebaseSignOut,
   onAuthStateChanged,
@@ -17,17 +15,6 @@ import { getFirebaseAuth, getFirebaseDb } from './firebase';
 import { UserSettings } from '@/types';
 
 const googleProvider = new GoogleAuthProvider();
-
-function isIOS(): boolean {
-  if (typeof window === 'undefined') return false;
-  return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-function isPWA(): boolean {
-  if (typeof window === 'undefined') return false;
-  return (window.navigator as { standalone?: boolean }).standalone === true ||
-    window.matchMedia('(display-mode: standalone)').matches;
-}
 
 async function createUserProfile(user: User): Promise<void> {
   const db = getFirebaseDb();
@@ -53,25 +40,12 @@ export async function signInWithGoogle(): Promise<User | null> {
   const auth = getFirebaseAuth();
   await setPersistence(auth, browserLocalPersistence);
 
-  if (isIOS() || isPWA()) {
-    // Use redirect on iOS/PWA — result handled by getGoogleRedirectResult()
-    await signInWithRedirect(auth, googleProvider);
-    return null;
-  }
-
+  // Always use popup — signInWithRedirect is broken on iOS Safari/Chrome
+  // due to Apple's Intelligent Tracking Prevention (ITP) blocking
+  // the third-party cookies Firebase needs for redirect results.
   const result = await signInWithPopup(auth, googleProvider);
   await createUserProfile(result.user);
   return result.user;
-}
-
-export async function getGoogleRedirectResult(): Promise<User | null> {
-  const auth = getFirebaseAuth();
-  const result = await getRedirectResult(auth);
-  if (result?.user) {
-    await createUserProfile(result.user);
-    return result.user;
-  }
-  return null;
 }
 
 export async function signInWithEmail(email: string, password: string): Promise<User> {
