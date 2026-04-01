@@ -17,29 +17,28 @@
   <text x="256" y="118" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="60" fill="#f97316" letter-spacing="16">PUSH</text>
 
   <!-- Odometer counter panel -->
-  <rect x="48" y="150" width="416" height="182" rx="26" ry="26" fill="url(#counterBg)" stroke="#333" stroke-width="4"/>
+  <rect x="48" y="150" width="416" height="210" rx="26" ry="26" fill="url(#counterBg)" stroke="#333" stroke-width="4"/>
 
   <!-- Inner shadow line top -->
   <rect x="48" y="150" width="416" height="8" rx="26" ry="0" fill="#000" opacity="0.5"/>
 
   <!-- Digit separators -->
-  <line x1="152" y1="154" x2="152" y2="328" stroke="#333" stroke-width="2.5"/>
-  <line x1="256" y1="154" x2="256" y2="328" stroke="#333" stroke-width="2.5"/>
-  <line x1="360" y1="154" x2="360" y2="328" stroke="#333" stroke-width="2.5"/>
+  <line x1="152" y1="154" x2="152" y2="310" stroke="#333" stroke-width="2.5"/>
+  <line x1="256" y1="154" x2="256" y2="310" stroke="#333" stroke-width="2.5"/>
+  <line x1="360" y1="154" x2="360" y2="310" stroke="#333" stroke-width="2.5"/>
 
-  <!-- Digits -->
-  <text x="100" y="302" text-anchor="middle" font-family="Courier New,monospace" font-weight="700" font-size="140" fill="#f97316">0</text>
-  <text x="204" y="302" text-anchor="middle" font-family="Courier New,monospace" font-weight="700" font-size="140" fill="#f97316">0</text>
-  <text x="308" y="302" text-anchor="middle" font-family="Courier New,monospace" font-weight="700" font-size="140" fill="#f97316">0</text>
-  <text x="412" y="302" text-anchor="middle" font-family="Courier New,monospace" font-weight="700" font-size="140" fill="#fb923c">0</text>
+  <!-- Digits: 1 0 0 0 -->
+  <text x="100" y="295" text-anchor="middle" font-family="Courier New,monospace" font-weight="700" font-size="140" fill="#f97316">1</text>
+  <text x="204" y="295" text-anchor="middle" font-family="Courier New,monospace" font-weight="700" font-size="140" fill="#f97316">0</text>
+  <text x="308" y="295" text-anchor="middle" font-family="Courier New,monospace" font-weight="700" font-size="140" fill="#f97316">0</text>
+  <text x="412" y="295" text-anchor="middle" font-family="Courier New,monospace" font-weight="700" font-size="140" fill="#fb923c">0</text>
 
   <!-- Flip line across center of counter -->
-  <rect x="48" y="238" width="416" height="5" fill="#000" opacity="0.7"/>
+  <rect x="48" y="231" width="416" height="5" fill="#000" opacity="0.7"/>
+
+  <!-- KG TOTAL inside panel, bottom -->
+  <text x="256" y="348" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="20" fill="#f97316" letter-spacing="5" opacity="0.7">KG TOTAL</text>
 
   <!-- Bottom label: TONNES -->
-  <text x="256" y="420" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="48" fill="#71717a" letter-spacing="14">TONNES</text>
-
-  <!-- Small unit badge -->
-  <rect x="192" y="436" width="128" height="36" rx="8" fill="#f97316" opacity="0.15"/>
-  <text x="256" y="460" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="22" fill="#f97316" letter-spacing="5">KG TOTAL</text>
+  <text x="256" y="436" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="48" fill="#71717a" letter-spacing="14">TONNES</text>
 </svg>
