@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/components/AuthProvider';
 import BottomNav from '@/components/BottomNav';
+import PWAInstallBanner from '@/components/PWAInstallBanner';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getSessions } from '@/lib/firestore';
@@ -144,6 +145,7 @@ export default function Dashboard() {
           )}
         </div>
       </main>
+      <PWAInstallBanner />
       <BottomNav />
     </div>
   );
