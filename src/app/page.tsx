@@ -98,12 +98,15 @@ export default function Home() {
             <img src="/icons/icon-192x192.png" alt="Push Tonnes" className="w-7 h-7 rounded-md" />
             <span className="font-bold text-white text-sm">Push Tonnes</span>
           </div>
-          <button
-            onClick={scrollToLogin}
-            className="text-sm font-medium text-orange-500 hover:text-orange-400 transition-colors"
-          >
-            Get started →
-          </button>
+          <div className="flex items-center gap-5">
+            <a href="/blog" className="text-sm text-zinc-400 hover:text-white transition-colors">Blog</a>
+            <button
+              onClick={scrollToLogin}
+              className="text-sm font-medium text-orange-500 hover:text-orange-400 transition-colors"
+            >
+              Get started →
+            </button>
+          </div>
         </div>
       </nav>
 

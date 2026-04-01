@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /history
+Disallow: /session
+Disallow: /settings
+Disallow: /leaderboard
+Disallow: /analytics
+Disallow: /api/
+
+Sitemap: https://www.push-tonnes.com/sitemap.xml
