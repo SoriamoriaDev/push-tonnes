@@ -75,6 +75,18 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-5Q0CE8N10G" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-5Q0CE8N10G');
+            `,
+          }}
+        />
       </head>
       <body className="antialiased bg-zinc-950 text-zinc-100 min-h-screen">
         <script
