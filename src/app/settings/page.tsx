@@ -8,10 +8,12 @@ import { getUserSettings, updateUserSettings } from '@/lib/firestore';
 import { signOut } from '@/lib/auth';
 import { updateProfile } from 'firebase/auth';
 import { UserSettings } from '@/types';
+import { useUnit } from '@/components/UnitProvider';
 
 export default function SettingsPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const { unit, setUnit } = useUnit();
   const [settings, setSettings] = useState<UserSettings>({ showOnLeaderboard: true });
   const [loadingSettings, setLoadingSettings] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -45,6 +47,8 @@ export default function SettingsPage() {
       if (settings.displayName && settings.displayName !== user.displayName) {
         await updateProfile(user, { displayName: settings.displayName });
       }
+      // Sync unit system to context
+      if (settings.unitSystem) setUnit(settings.unitSystem);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
@@ -158,6 +162,30 @@ export default function SettingsPage() {
         {/* Preferences */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-6">
           <p className="text-xs text-zinc-500 mb-3 uppercase tracking-wider">Preferences</p>
+
+          {/* Unit system */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-sm text-white">Unit system</p>
+              <p className="text-xs text-zinc-500">Affects all weights and tonnage display</p>
+            </div>
+            <div className="flex rounded-lg overflow-hidden border border-zinc-700">
+              {(['metric', 'imperial'] as const).map((u) => (
+                <button
+                  key={u}
+                  onClick={() => setSettings({ ...settings, unitSystem: u })}
+                  className={`px-3 py-1.5 text-xs font-medium transition-colors ${
+                    (settings.unitSystem ?? unit) === u
+                      ? 'bg-orange-500 text-white'
+                      : 'text-zinc-400 hover:text-zinc-200'
+                  }`}
+                >
+                  {u === 'metric' ? 'kg / t' : 'lbs / klbs'}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-white">Show on leaderboard</p>

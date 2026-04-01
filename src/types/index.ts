@@ -12,6 +12,7 @@ export interface UserSettings {
   age?: number;
   weight?: number;
   gender?: 'male' | 'female' | 'other';
+  unitSystem?: 'metric' | 'imperial';
 }
 
 export interface WorkoutSet {

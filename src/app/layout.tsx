@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/components/AuthProvider';
+import { UnitProvider } from '@/components/UnitProvider';
 
 export const metadata: Metadata = {
   title: {
@@ -92,7 +93,9 @@ export default function RootLayout({
           }}
         />
         <AuthProvider>
-          {children}
+          <UnitProvider>
+            {children}
+          </UnitProvider>
         </AuthProvider>
         <script
           dangerouslySetInnerHTML={{

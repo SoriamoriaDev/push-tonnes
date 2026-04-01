@@ -6,7 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getSessions } from '@/lib/firestore';
 import { Session } from '@/types';
-import { formatTonnage, formatDate, formatDuration } from '@/lib/utils';
+import { formatDate, formatDuration } from '@/lib/utils';
+import { formatVolume } from '@/lib/units';
+import { useUnit } from '@/components/UnitProvider';
 import Link from 'next/link';
 
 export default function History() {
@@ -14,6 +16,7 @@ export default function History() {
   const router = useRouter();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(true);
+  const { unit } = useUnit();
 
   useEffect(() => {
     if (!loading && !user) router.push('/');
@@ -83,7 +86,7 @@ export default function History() {
                         {monthNames[parseInt(month) - 1]} {year}
                       </h2>
                       <span className="text-xs text-zinc-500">
-                        {monthSessions.length} sessions · {formatTonnage(monthTonnage)}
+                        {monthSessions.length} sessions · {formatVolume(monthTonnage, unit)}
                       </span>
                     </div>
                     <div className="space-y-2">
@@ -111,7 +114,7 @@ export default function History() {
                             </div>
                             <div className="text-right">
                               <p className="text-lg font-bold text-orange-500">
-                                {formatTonnage(session.totalTonnage)}
+                                {formatVolume(session.totalTonnage, unit)}
                               </p>
                               <p className="text-xs text-zinc-500">
                                 {session.exercises.length} exercises

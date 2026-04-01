@@ -6,7 +6,9 @@ import VoiceInput from '@/components/VoiceInput';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { saveSession, getExerciseCatalog } from '@/lib/firestore';
-import { calculateVolume, calculateExerciseTonnage, calculateSessionTonnage, formatTonnage } from '@/lib/utils';
+import { calculateVolume, calculateExerciseTonnage, calculateSessionTonnage } from '@/lib/utils';
+import { formatVolume, formatWeight, toStorageKg, weightLabel } from '@/lib/units';
+import { useUnit } from '@/components/UnitProvider';
 import { Exercise, WorkoutSet, ExerciseCatalogEntry, SessionLocation } from '@/types';
 import { SpeechResult } from '@/lib/speech';
 
@@ -25,6 +27,7 @@ interface DraftData {
 
 export default function NewSession() {
   const { user, loading } = useAuth();
+  const { unit } = useUnit();
   const router = useRouter();
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [exercises, setExercises] = useState<ExerciseFormData[]>([
@@ -273,7 +276,7 @@ export default function NewSession() {
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold text-orange-500 leading-tight">
-                {formatTonnage(totalTonnage)}
+                {formatVolume(totalTonnage, unit)}
               </p>
               <p className="text-zinc-500 text-[10px]">total tonnage</p>
             </div>
@@ -336,7 +339,7 @@ export default function NewSession() {
                     )}
                   </div>
                   <span className="text-sm font-bold text-orange-500 min-w-[60px] text-right">
-                    {formatTonnage(exerciseTonnage)}
+                    {formatVolume(exerciseTonnage, unit)}
                   </span>
                   {exercises.length > 1 && (
                     <button
@@ -354,7 +357,7 @@ export default function NewSession() {
                   <div className="grid grid-cols-[1fr_80px_80px_60px_30px] gap-1 text-xs text-zinc-500 px-1">
                     <span>Set</span>
                     <span>Reps</span>
-                    <span>Weight</span>
+                    <span>{weightLabel(unit)}</span>
                     <span>Vol</span>
                     <span></span>
                   </div>
@@ -428,7 +431,7 @@ export default function NewSession() {
           disabled={saving}
           className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-4 rounded-xl transition-colors disabled:opacity-50 mb-4"
         >
-          {saving ? 'Saving...' : `Save Session (${formatTonnage(totalTonnage)})`}
+          {saving ? 'Saving...' : `Save Session (${formatVolume(totalTonnage, unit)})`}
         </button>
       </main>
       <BottomNav />

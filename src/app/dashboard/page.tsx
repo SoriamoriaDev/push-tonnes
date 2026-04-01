@@ -7,7 +7,9 @@ import { useEffect, useState } from 'react';
 import { getSessions } from '@/lib/firestore';
 import { signOut } from '@/lib/auth';
 import { Session } from '@/types';
-import { formatTonnage, formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
+import { formatVolume, formatWeight } from '@/lib/units';
+import { useUnit } from '@/components/UnitProvider';
 import Link from 'next/link';
 
 export default function Dashboard() {
@@ -23,6 +25,7 @@ export default function Dashboard() {
   }, [user, loading, router]);
 
   const [allSessions, setAllSessions] = useState<Session[]>([]);
+  const { unit } = useUnit();
 
   useEffect(() => {
     if (user) {
@@ -75,7 +78,7 @@ export default function Dashboard() {
           <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
             <p className="text-zinc-400 text-xs mb-1">All Time</p>
             <p className="text-2xl font-bold text-orange-500">
-              {formatTonnage(allTimeTonnage)}
+              {formatVolume(allTimeTonnage, unit)}
             </p>
           </div>
           <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
@@ -131,7 +134,7 @@ export default function Dashboard() {
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-orange-500">
-                        {formatTonnage(session.totalTonnage)}
+                        {formatVolume(session.totalTonnage, unit)}
                       </p>
                     </div>
                   </div>

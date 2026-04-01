@@ -6,7 +6,9 @@ import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getSession, deleteSession, saveAnalysis } from '@/lib/firestore';
 import { Session, AIAnalysis } from '@/types';
-import { formatTonnage, formatDate, formatDuration } from '@/lib/utils';
+import { formatDate, formatDuration } from '@/lib/utils';
+import { formatVolume, formatWeight } from '@/lib/units';
+import { useUnit } from '@/components/UnitProvider';
 
 export default function SessionDetail() {
   const { user, loading } = useAuth();
@@ -17,6 +19,7 @@ export default function SessionDetail() {
   const [loadingSession, setLoadingSession] = useState(true);
   const [analysis, setAnalysis] = useState<AIAnalysis | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const { unit } = useUnit();
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -112,7 +115,7 @@ export default function SessionDetail() {
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold text-orange-500 leading-tight">
-                {formatTonnage(session.totalTonnage)}
+                {formatVolume(session.totalTonnage, unit)}
               </p>
               <p className="text-zinc-500 text-[10px]">total tonnage</p>
             </div>
@@ -145,15 +148,15 @@ export default function SessionDetail() {
               <div className="flex items-center justify-between mb-2">
                 <h3 className="font-medium text-white">{exercise.name}</h3>
                 <span className="text-sm font-bold text-orange-500">
-                  {formatTonnage(exercise.tonnage)}
+                  {formatVolume(exercise.tonnage, unit)}
                 </span>
               </div>
               <div className="space-y-1">
                 {exercise.sets.map((set, j) => (
                   <div key={j} className="flex items-center gap-4 text-sm text-zinc-400">
                     <span className="text-zinc-600 w-6">#{j + 1}</span>
-                    <span>{set.reps} × {set.weight}kg</span>
-                    <span className="text-zinc-500">= {set.volume}kg</span>
+                    <span>{set.reps} × {formatWeight(set.weight, unit)}</span>
+                    <span className="text-zinc-500">= {formatVolume(set.volume, unit)}</span>
                   </div>
                 ))}
               </div>
