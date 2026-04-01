@@ -208,6 +208,7 @@ export default function NewSession() {
         };
       });
 
+      const endTime = new Date();
       await saveSession({
         userId: user.uid,
         date: new Date(date),
@@ -215,6 +216,8 @@ export default function NewSession() {
         exercises: sessionExercises,
         notes,
         duration: Math.round((Date.now() - startTime) / 60000),
+        startTime: new Date(startTime),
+        endTime,
         ...(location ? { location } : {}),
         createdAt: new Date(),
       });

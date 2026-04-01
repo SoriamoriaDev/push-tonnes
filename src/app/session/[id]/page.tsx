@@ -6,7 +6,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getSession, deleteSession, saveAnalysis } from '@/lib/firestore';
 import { Session, AIAnalysis } from '@/types';
-import { formatTonnage, formatDate } from '@/lib/utils';
+import { formatTonnage, formatDate, formatDuration } from '@/lib/utils';
 
 export default function SessionDetail() {
   const { user, loading } = useAuth();
@@ -166,6 +166,39 @@ export default function SessionDetail() {
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-6">
             <p className="text-zinc-400 text-xs mb-1">Notes</p>
             <p className="text-sm text-zinc-300">{session.notes}</p>
+          </div>
+        )}
+
+        {/* Session Timing */}
+        {(session.startTime || session.endTime || session.duration) && (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-4">
+            <p className="text-zinc-400 text-xs mb-2 uppercase tracking-wider">Session Timing</p>
+            <div className="grid grid-cols-3 gap-2 text-center">
+              {session.startTime && (
+                <div>
+                  <p className="text-[10px] text-zinc-500 mb-0.5">Start</p>
+                  <p className="text-sm font-medium text-white">
+                    {session.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              )}
+              {session.endTime && (
+                <div>
+                  <p className="text-[10px] text-zinc-500 mb-0.5">End</p>
+                  <p className="text-sm font-medium text-white">
+                    {session.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              )}
+              {session.duration !== undefined && (
+                <div>
+                  <p className="text-[10px] text-zinc-500 mb-0.5">Duration</p>
+                  <p className="text-sm font-bold text-orange-500">
+                    {formatDuration(session.duration)}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

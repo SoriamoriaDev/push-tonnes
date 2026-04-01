@@ -44,6 +44,8 @@ export interface Session {
   aiAnalysis?: AIAnalysis;
   location?: SessionLocation;
   duration?: number;
+  startTime?: Date;
+  endTime?: Date;
   createdAt: Date;
 }
 

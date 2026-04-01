@@ -43,6 +43,8 @@ export async function saveSession(session: Session): Promise<string> {
     notes: session.notes || '',
     ...(session.location ? { location: session.location } : {}),
     ...(session.duration !== undefined ? { duration: session.duration } : {}),
+    ...(session.startTime ? { startTime: Timestamp.fromDate(session.startTime) } : {}),
+    ...(session.endTime ? { endTime: Timestamp.fromDate(session.endTime) } : {}),
     createdAt: Timestamp.fromDate(new Date()),
   });
 
@@ -74,6 +76,9 @@ export async function getSessions(
       exercises: data.exercises as Exercise[],
       notes: data.notes,
       aiAnalysis: data.aiAnalysis as AIAnalysis | undefined,
+      startTime: data.startTime?.toDate(),
+      endTime: data.endTime?.toDate(),
+      duration: data.duration,
       createdAt: data.createdAt.toDate(),
     };
   });
@@ -98,6 +103,8 @@ export async function getSession(
     notes: data.notes,
     aiAnalysis: data.aiAnalysis as AIAnalysis | undefined,
     duration: data.duration,
+    startTime: data.startTime?.toDate(),
+    endTime: data.endTime?.toDate(),
     createdAt: data.createdAt.toDate(),
   };
 }
