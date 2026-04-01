@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: 'tonnage-strategy-for-fat-loss',
+    title: 'The Tonnage Strategy for Fat Loss: Why I Built This App',
+    excerpt: 'I built Push Tonnes to lose weight — and when I thought clearly about what burns the most calories in the gym, tonnage was the answer. Here\'s the full strategy.',
+    date: '2026-04-01',
+    readTime: '6 min read',
+    tag: 'Fat Loss',
+  },
+  {
     slug: 'what-is-tonnage-training',
     title: 'What Is Tonnage Training? The Complete Guide for Lifters',
     excerpt: 'Tonnage (or volume load) is one of the most reliable predictors of muscle growth and strength gains. Learn how to calculate it and why it matters.',
