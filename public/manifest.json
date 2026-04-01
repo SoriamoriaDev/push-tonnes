@@ -1,6 +1,6 @@
 {
-  "name": "PushAtonne",
-  "short_name": "PushAtonne",
+  "name": "Push Tonnes",
+  "short_name": "Push Tonnes",
   "description": "Track your gym sessions, analyze tonnage, and compete on the leaderboard",
   "start_url": "/",
   "display": "standalone",
