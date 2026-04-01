@@ -8,6 +8,7 @@ import { getSession, deleteSession, saveAnalysis } from '@/lib/firestore';
 import { Session, AIAnalysis } from '@/types';
 import { formatDate, formatDuration } from '@/lib/utils';
 import { formatVolume, formatWeight } from '@/lib/units';
+import { formatCalories } from '@/lib/calories';
 import { useUnit } from '@/components/UnitProvider';
 
 export default function SessionDetail() {
@@ -172,11 +173,11 @@ export default function SessionDetail() {
           </div>
         )}
 
-        {/* Session Timing */}
-        {(session.startTime || session.endTime || session.duration) && (
+        {/* Session Timing & Calories */}
+        {(session.startTime || session.endTime || session.duration || session.caloriesBurned) && (
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-4">
-            <p className="text-zinc-400 text-xs mb-2 uppercase tracking-wider">Session Timing</p>
-            <div className="grid grid-cols-3 gap-2 text-center">
+            <p className="text-zinc-400 text-xs mb-2 uppercase tracking-wider">Session Stats</p>
+            <div className={`grid gap-2 text-center ${session.caloriesBurned ? 'grid-cols-4' : 'grid-cols-3'}`}>
               {session.startTime && (
                 <div>
                   <p className="text-[10px] text-zinc-500 mb-0.5">Start</p>
@@ -198,6 +199,14 @@ export default function SessionDetail() {
                   <p className="text-[10px] text-zinc-500 mb-0.5">Duration</p>
                   <p className="text-sm font-bold text-orange-500">
                     {formatDuration(session.duration)}
+                  </p>
+                </div>
+              )}
+              {session.caloriesBurned !== undefined && (
+                <div>
+                  <p className="text-[10px] text-zinc-500 mb-0.5">Calories</p>
+                  <p className="text-sm font-bold text-red-400">
+                    🔥 {formatCalories(session.caloriesBurned)}
                   </p>
                 </div>
               )}

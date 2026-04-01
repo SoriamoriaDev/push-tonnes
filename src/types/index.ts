@@ -11,6 +11,7 @@ export interface UserSettings {
   displayName?: string;
   age?: number;
   weight?: number;
+  height?: number; // in cm
   gender?: 'male' | 'female' | 'other';
   unitSystem?: 'metric' | 'imperial';
 }
@@ -47,6 +48,7 @@ export interface Session {
   duration?: number;
   startTime?: Date;
   endTime?: Date;
+  caloriesBurned?: number;
   createdAt: Date;
 }
 

@@ -9,6 +9,8 @@ import { saveSession, getExerciseCatalog } from '@/lib/firestore';
 import { calculateVolume, calculateExerciseTonnage, calculateSessionTonnage } from '@/lib/utils';
 import { formatVolume, formatWeight, toStorageKg, weightLabel } from '@/lib/units';
 import { useUnit } from '@/components/UnitProvider';
+import { estimateCaloriesBurned } from '@/lib/calories';
+import { getUserSettings } from '@/lib/firestore';
 import { Exercise, WorkoutSet, ExerciseCatalogEntry, SessionLocation } from '@/types';
 import { SpeechResult } from '@/lib/speech';
 
@@ -212,21 +214,33 @@ export default function NewSession() {
       });
 
       const endTime = new Date();
-      await saveSession({
+      const durationMins = Math.round((Date.now() - startTime) / 60000);
+      const totalTonnage = calculateSessionTonnage(sessionExercises);
+
+      // Fetch user settings for calorie calculation
+      const userSettings = await getUserSettings(user.uid);
+      const caloriesBurned = estimateCaloriesBurned({
+        totalTonnage,
+        durationMinutes: durationMins,
+        userSettings,
+      }) ?? undefined;
+
+      const sessionId = await saveSession({
         userId: user.uid,
         date: new Date(date),
-        totalTonnage: calculateSessionTonnage(sessionExercises),
+        totalTonnage,
         exercises: sessionExercises,
         notes,
-        duration: Math.round((Date.now() - startTime) / 60000),
+        duration: durationMins,
         startTime: new Date(startTime),
         endTime,
+        caloriesBurned,
         ...(location ? { location } : {}),
         createdAt: new Date(),
       });
 
       localStorage.removeItem(DRAFT_KEY);
-      router.push('/dashboard');
+      router.push(`/session/${sessionId}`);
     } catch (error) {
       console.error('Failed to save session:', error);
       alert('Failed to save session. Please try again.');

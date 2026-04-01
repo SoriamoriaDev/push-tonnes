@@ -45,6 +45,7 @@ export async function saveSession(session: Session): Promise<string> {
     ...(session.duration !== undefined ? { duration: session.duration } : {}),
     ...(session.startTime ? { startTime: Timestamp.fromDate(session.startTime) } : {}),
     ...(session.endTime ? { endTime: Timestamp.fromDate(session.endTime) } : {}),
+    ...(session.caloriesBurned !== undefined ? { caloriesBurned: session.caloriesBurned } : {}),
     createdAt: Timestamp.fromDate(new Date()),
   });
 
@@ -77,6 +78,7 @@ export async function getSessions(
       notes: data.notes,
       aiAnalysis: data.aiAnalysis as AIAnalysis | undefined,
       startTime: data.startTime?.toDate(),
+      caloriesBurned: data.caloriesBurned,
       endTime: data.endTime?.toDate(),
       duration: data.duration,
       createdAt: data.createdAt.toDate(),
@@ -104,6 +106,7 @@ export async function getSession(
     aiAnalysis: data.aiAnalysis as AIAnalysis | undefined,
     duration: data.duration,
     startTime: data.startTime?.toDate(),
+      caloriesBurned: data.caloriesBurned,
     endTime: data.endTime?.toDate(),
     createdAt: data.createdAt.toDate(),
   };

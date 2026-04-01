@@ -117,6 +117,19 @@ export default function SettingsPage() {
             </div>
 
             <div>
+              <label className="text-sm text-zinc-400 block mb-1">Height (cm)</label>
+              <input
+                type="number"
+                min={100}
+                max={250}
+                value={settings.height ?? ''}
+                onChange={(e) => setSettings({ ...settings, height: e.target.value ? parseInt(e.target.value) : undefined })}
+                placeholder="Your height in cm"
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-orange-500"
+              />
+            </div>
+
+            <div>
               <label className="text-sm text-zinc-400 block mb-1">Age</label>
               <input
                 type="number"
