@@ -235,6 +235,66 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── BLOG ── */}
+      <section className="py-20 px-6 max-w-5xl mx-auto">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-3">From the blog</h2>
+          <p className="text-zinc-400 text-base max-w-md mx-auto">Science-backed guides to help you lift smarter.</p>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {[
+            {
+              slug: 'tonnage-strategy-for-fat-loss',
+              title: 'The Tonnage Strategy for Fat Loss',
+              excerpt: 'Why tonnage is the key metric for burning calories in the gym — and how to use it.',
+              tag: 'Fat Loss',
+              readTime: '6 min read',
+            },
+            {
+              slug: 'what-is-tonnage-training',
+              title: 'What Is Tonnage Training?',
+              excerpt: 'The complete guide to volume load — one of the most reliable predictors of muscle growth.',
+              tag: 'Training Science',
+              readTime: '6 min read',
+            },
+            {
+              slug: 'how-to-track-workout-volume',
+              title: 'How to Track Workout Volume',
+              excerpt: 'Most lifters track reps and weights but ignore total volume. Here\'s why that\'s a mistake.',
+              tag: 'Tracking',
+              readTime: '5 min read',
+            },
+            {
+              slug: 'progressive-overload-guide',
+              title: 'Progressive Overload: The Only Principle You Need',
+              excerpt: 'How to apply progressive overload systematically using volume tracking.',
+              tag: 'Programming',
+              readTime: '7 min read',
+            },
+          ].map((post, i) => (
+            <a
+              key={i}
+              href={`/blog/${post.slug}`}
+              className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 hover:border-zinc-700 hover:-translate-y-0.5 transition-all block"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-xs font-medium text-orange-500 bg-orange-500/10 px-2.5 py-0.5 rounded-full">
+                  {post.tag}
+                </span>
+                <span className="text-xs text-zinc-500">{post.readTime}</span>
+              </div>
+              <h3 className="font-bold text-white text-base mb-2 leading-snug">{post.title}</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">{post.excerpt}</p>
+            </a>
+          ))}
+        </div>
+        <div className="text-center mt-8">
+          <a href="/blog" className="text-sm font-medium text-orange-500 hover:text-orange-400 transition-colors">
+            View all articles →
+          </a>
+        </div>
+      </section>
+
       {/* ── LOGIN ── */}
       <section id="login" className="py-20 px-6">
         <div className="max-w-sm mx-auto">

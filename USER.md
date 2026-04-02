@@ -2,15 +2,15 @@
 
 _Learn about the person you're helping. Update this as you go._
 
-- **Name:**
-- **What to call them:**
-- **Pronouns:** _(optional)_
-- **Timezone:**
-- **Notes:**
+- **Name:** Max
+- **What to call them:** Max
+- **Telegram:** @max_la_menace
+- **Notes:** This agent and Telegram channel are dedicated to the Push Tonnes project.
 
 ## Context
 
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
+- Building Push Tonnes — a fitness app for tracking workout tonnage.
+- Prefers direct, no-fluff communication.
 
 ---
 
