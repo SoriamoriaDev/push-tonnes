@@ -25,6 +25,7 @@ interface DraftData {
   date: string;
   exercises: ExerciseFormData[];
   notes: string;
+  startTime?: number;
 }
 
 export default function NewSession() {
@@ -42,7 +43,20 @@ export default function NewSession() {
   const [showDraftBanner, setShowDraftBanner] = useState(false);
   const [location, setLocation] = useState<SessionLocation | null>(null);
   const [locationStatus, setLocationStatus] = useState<'idle' | 'acquiring' | 'ok' | 'denied'>('idle');
-  const [startTime] = useState(() => Date.now());
+  const [startTime] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (raw) {
+          const draft = JSON.parse(raw);
+          if (draft.startTime && typeof draft.startTime === 'number') {
+            return draft.startTime;
+          }
+        }
+      } catch { /* ignore */ }
+    }
+    return Date.now();
+  });
   const isFirstRender = useRef(true);
 
   useEffect(() => {
@@ -74,9 +88,9 @@ export default function NewSession() {
       isFirstRender.current = false;
       return;
     }
-    const draft: DraftData = { date, exercises, notes };
+    const draft: DraftData = { date, exercises, notes, startTime };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-  }, [date, exercises, notes]);
+  }, [date, exercises, notes, startTime]);
 
   // Request geolocation silently on mount
   useEffect(() => {
