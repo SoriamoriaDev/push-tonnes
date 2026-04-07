@@ -206,7 +206,7 @@ export default function SessionDetail() {
                 <div>
                   <p className="text-[10px] text-zinc-500 mb-0.5">Calories</p>
                   <p className="text-sm font-bold text-red-400">
-                    🔥 {formatCalories(session.caloriesBurned)}
+                    {formatCalories(session.caloriesBurned)}
                   </p>
                 </div>
               )}
