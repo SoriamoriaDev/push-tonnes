@@ -304,7 +304,7 @@ export default function NewSession() {
             </div>
           </div>
           <div className="text-center">
-            <p className="text-5xl sm:text-6xl font-black text-orange-500 leading-none tracking-tight">
+            <p className="text-8xl sm:text-9xl font-black text-orange-500 leading-none tracking-tight">
               {formatVolume(totalTonnage, unit)}
             </p>
             <p className="text-zinc-500 text-xs mt-1 uppercase tracking-widest">total tonnage</p>
