@@ -290,8 +290,8 @@ export default function NewSession() {
 
       {/* Sticky header with tonnage */}
       <div className="sticky top-0 z-10 bg-black/90 backdrop-blur-sm border-b border-zinc-800">
-        <div className="max-w-lg mx-auto px-4 pt-4 pb-3">
-          <div className="flex items-center justify-between">
+        <div className="max-w-lg mx-auto px-4 pt-3 pb-3">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <h1 className="text-sm font-medium text-white">New Session</h1>
               <VoiceInput onResult={handleVoiceResult} />
@@ -302,12 +302,12 @@ export default function NewSession() {
                 📍
               </span>
             </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-orange-500 leading-tight">
-                {formatVolume(totalTonnage, unit)}
-              </p>
-              <p className="text-zinc-500 text-[10px]">total tonnage</p>
-            </div>
+          </div>
+          <div className="text-center">
+            <p className="text-5xl sm:text-6xl font-black text-orange-500 leading-none tracking-tight">
+              {formatVolume(totalTonnage, unit)}
+            </p>
+            <p className="text-zinc-500 text-xs mt-1 uppercase tracking-widest">total tonnage</p>
           </div>
         </div>
       </div>
