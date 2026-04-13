@@ -102,7 +102,7 @@ export default function VoiceInput({ onResult }: VoiceInputProps) {
       <button
         type="button"
         onClick={startListening}
-        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
           listening
             ? 'bg-red-500/20 text-red-400 border border-red-500/30'
             : 'bg-zinc-800 text-zinc-300 border border-zinc-700 hover:border-zinc-600'
@@ -118,7 +118,7 @@ export default function VoiceInput({ onResult }: VoiceInputProps) {
       <button
         type="button"
         onClick={toggleLang}
-        className="text-xs text-zinc-500 hover:text-zinc-300 px-1.5 py-1 rounded border border-zinc-800 hover:border-zinc-600"
+        className="text-xs text-zinc-500 hover:text-zinc-300 px-2 py-2 rounded-lg border border-zinc-800 hover:border-zinc-600"
         title="Toggle language"
       >
         {lang.toUpperCase()}
