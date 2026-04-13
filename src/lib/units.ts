@@ -54,6 +54,15 @@ export function formatVolume(kg: number, unit: UnitSystem): string {
   return `${kg}kg`;
 }
 
+/** Always format as tonnes (or klbs for imperial) — used for the big tonnage display */
+export function formatVolumeAsTonnes(kg: number, unit: UnitSystem): string {
+  if (unit === 'imperial') {
+    const lbs = kg * KG_TO_LBS;
+    return `${(lbs / 1000).toFixed(1)}klbs`;
+  }
+  return `${(kg / 1000).toFixed(1)}t`;
+}
+
 /** Unit label for input fields */
 export function weightLabel(unit: UnitSystem): string {
   return unit === 'imperial' ? 'lbs' : 'kg';

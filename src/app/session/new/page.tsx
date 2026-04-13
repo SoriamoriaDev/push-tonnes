@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { saveSession, getExerciseCatalog } from '@/lib/firestore';
 import { calculateVolume, calculateExerciseTonnage, calculateSessionTonnage } from '@/lib/utils';
-import { formatVolume, formatWeight, toStorageKg, weightLabel } from '@/lib/units';
+import { formatVolume, formatVolumeAsTonnes, formatWeight, toStorageKg, weightLabel } from '@/lib/units';
 import { useUnit } from '@/components/UnitProvider';
 import { estimateCaloriesBurned } from '@/lib/calories';
 import { getUserSettings } from '@/lib/firestore';
@@ -307,7 +307,7 @@ export default function NewSession() {
           </div>
           <div className="text-center">
             <p className="text-[9rem] sm:text-[12rem] font-black text-orange-500 leading-none tracking-tight">
-              {formatVolume(totalTonnage, unit)}
+              {formatVolumeAsTonnes(totalTonnage, unit)}
             </p>
             <p className="text-zinc-500 text-xs mt-1 uppercase tracking-widest">total tonnage</p>
           </div>
