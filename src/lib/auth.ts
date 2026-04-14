@@ -1,6 +1,6 @@
 import {
-  signInWithPopup,
   GoogleAuthProvider,
+  signInWithCredential,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   browserLocalPersistence,
@@ -13,8 +13,6 @@ import {
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { getFirebaseAuth, getFirebaseDb } from './firebase';
 import { UserSettings } from '@/types';
-
-const googleProvider = new GoogleAuthProvider();
 
 async function createUserProfile(user: User): Promise<void> {
   const db = getFirebaseDb();
@@ -36,14 +34,17 @@ async function createUserProfile(user: User): Promise<void> {
   }
 }
 
-export async function signInWithGoogle(): Promise<User | null> {
+/**
+ * Sign in with Google using Google Identity Services (GIS).
+ * Uses signInWithCredential instead of signInWithPopup to avoid
+ * iOS Safari ITP issues that block popup-based auth flows.
+ */
+export async function signInWithGoogleCredential(idToken: string): Promise<User> {
   const auth = getFirebaseAuth();
   await setPersistence(auth, browserLocalPersistence);
 
-  // Always use popup — signInWithRedirect is broken on iOS Safari/Chrome
-  // due to Apple's Intelligent Tracking Prevention (ITP) blocking
-  // the third-party cookies Firebase needs for redirect results.
-  const result = await signInWithPopup(auth, googleProvider);
+  const credential = GoogleAuthProvider.credential(idToken);
+  const result = await signInWithCredential(auth, credential);
   await createUserProfile(result.user);
   return result.user;
 }
